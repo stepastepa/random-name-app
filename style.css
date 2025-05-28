@@ -180,9 +180,6 @@ body {
     z-index: 2;
     transition: transform 0.5s ease, border-radius 0.5s ease;
   }
-  #result {
-    justify-content: space-between;
-  }
   #openOptions, #openVault {
     flex-shrink: 0;
 /*     background-color: #ebebeb; */
@@ -193,6 +190,12 @@ body {
     justify-content: center;
     align-items: center;
     opacity: 0.95;
+  }
+  #openOptions {
+    margin-right: auto;
+  }
+  #openVault {
+    margin-left: auto;
   }
   #openOptions svg, #openVault svg {
     flex-shrink: 0;
