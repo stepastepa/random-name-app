@@ -13,16 +13,19 @@ function toggleVaultTab() {
   options.classList.toggle('vaultActive');
 }
 
+// like
 document.querySelector('#vault').addEventListener('click', (event) => {
   if (event.target.tagName === 'LI') {
     event.target.classList.toggle('liked');
   }
 });
 
+// select length
 optButtons.forEach(opt => {
   opt.addEventListener('click', (event) => {
     document.querySelector('#options .selected').classList.remove('selected');
     event.target.classList.add('selected');
+    generateAndPaste();
   });
 });
 
@@ -57,8 +60,56 @@ function generateNaturalWord(length) {
   return word;
 }
 
-field.addEventListener('click', () => {
-  let length = parseFloat(document.querySelector('.selected').innerText);
-  // console.log(length);
-  field.innerHTML = generateNaturalWord(length);
+function generateAndPaste() {
+  field.innerHTML = generateNaturalWord(parseFloat(document.querySelector('.selected').innerText));
+}
+
+// initial random name
+generateAndPaste();
+
+// field.addEventListener('click', () => {
+//   let length = parseFloat(document.querySelector('.selected').innerText);
+//   field.innerHTML = generateNaturalWord(length);
+// });
+
+////////////////////////////////////////////
+////////   drag + local storage   //////////
+////////////////////////////////////////////
+
+let offsetX, offsetY;
+let isDragging = false;
+
+field.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  offsetX = e.clientX - field.offsetLeft;
+  offsetY = e.clientY - field.offsetTop;
+  field.classList.add('hold');
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
+
+  const x = e.clientX - offsetX;
+  const y = e.clientY - offsetY;
+
+  field.style.left = `${x}px`;
+  field.style.top = `${y}px`;
+});
+
+document.addEventListener("mouseup", (e) => {
+  isDragging = false;
+  field.classList.remove('hold');
+
+  const dropTarget = document.elementFromPoint(e.clientX, e.clientY);
+  if (dropTarget && (dropTarget.id === "trash" || dropTarget.closest('#trash'))) {
+    generateAndPaste();
+  } else if (dropTarget && (dropTarget.id === "favorite" || dropTarget.closest('#favorite'))) {
+    document.querySelector('#vault ul').innerHTML += `
+      <li>${field.innerText}</li>
+    `;
+    generateAndPaste();
+  }
+  // reset position:
+  field.style.left = '';
+  field.style.top = '';
 });

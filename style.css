@@ -116,12 +116,18 @@ body {
 #field {
   max-width: 75%;
   overflow: auto;
-  cursor: pointer;
   background-color: hsl(48deg 30% 91%);
   font-size: clamp(1rem, 15vw - 2rem, 2rem);
   font-weight: bold;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
+  cursor: grab;
+  user-select: none;
+  z-index: 2;
+}
+#field.hold {
+  cursor: grabbing;
+  position: absolute;
 }
 
 #openOptions, #openVault {
