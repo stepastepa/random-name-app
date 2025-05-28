@@ -1,0 +1,210 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+html {
+  --font-sans-serif: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+  --font-serif: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+
+  font-family: var(--font-sans-serif);
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+  max-width: 100vw;
+}
+
+.wrapper {
+  height: 100dvh;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  font-size: 1.25rem;
+  background-color: #333;
+  background-image: repeating-linear-gradient(-45deg, hsl(0deg 0% 0% / 0.02), hsl(0deg 0% 0% / 0.02) 5px, transparent 5px, transparent 10px);
+}
+
+#options, #vault {
+  color: #ccc;
+  padding: 2rem 1rem;
+  overflow: auto;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#vault {
+  padding: 2rem 1rem 2rem 2rem;
+  justify-content: flex-start;
+}
+#options ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+#vault ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+#vault li {
+  cursor: pointer;
+}
+#vault li::before {
+  content: '';
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="black" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>') center / contain no-repeat;
+  background-color: hsl(0deg 0 0 / 0.15);
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  cursor: pointer;
+}
+#vault li.liked::before {
+  mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="black" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>') center / contain no-repeat;
+  background-color: currentColor;
+}
+
+#options li {
+  cursor: pointer;
+/*   box-shadow: 0 0 0 3px hsl(0deg 0 0 / 0.2); */
+  background-color: hsl(0deg 0 0 / 0.15);
+  height: 2.75rem;
+  width: 2.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 33%;
+}
+#options li.selected {
+  background-color: #ccc;
+  color: #222;
+  font-weight: bold;
+}
+
+#app {
+  border-radius: 1rem;
+  margin: 2rem 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto max-content auto;
+}
+
+#result {
+  background-color: #FAF8F0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5rem;
+  color: #333;
+}
+
+#field {
+  max-width: 75%;
+  overflow: auto;
+  cursor: pointer;
+  background-color: hsl(48deg 30% 91%);
+  font-size: clamp(1rem, 15vw - 2rem, 2rem);
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+#openOptions, #openVault {
+  display: none;
+  transition: all 0.5s ease;
+}
+
+#favorite, #trash {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#favorite {
+  background-color: hsl(140deg 70% 55%);
+}
+#trash {
+  background-color: hsl(355deg 74% 58%);
+}
+#favorite svg, #trash svg {
+  opacity: 0.2;
+}
+
+
+@media (max-width: 800px) {
+  .wrapper {
+    display: flex;
+  }
+  
+  #options {
+    position: absolute;
+    min-height: 100dvh;
+    inset: 0 20vw 0 0;
+    transition: transform 0.5s ease;
+  }
+
+  #vault {
+    position: absolute;
+    min-height: 100dvh;
+    inset: 0 0 0 20vw;
+    transition: transform 0.5s ease;
+  }
+  
+  #app {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    border-radius: 0;
+    min-height: 100dvh;
+    z-index: 2;
+    transition: transform 0.5s ease, border-radius 0.5s ease;
+  }
+  #result {
+    justify-content: space-between;
+  }
+  #openOptions, #openVault {
+    flex-shrink: 0;
+/*     background-color: #ebebeb; */
+    cursor: pointer;
+    width: 64px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.95;
+  }
+  #openOptions svg, #openVault svg {
+    flex-shrink: 0;
+  }
+  
+  #app.optionsActive, #vault.optionsActive {
+    transform: translateX(80%);
+    border-radius: 1rem;
+  }
+  #app.optionsActive #openOptions {
+    width: 20vw;
+  }
+  
+  #app.vaultActive, #options.vaultActive {
+    transform: translateX(-80%);
+    border-radius: 1rem;
+  }
+  #app.vaultActive #openVault {
+    width: 20vw;
+  }
+}
