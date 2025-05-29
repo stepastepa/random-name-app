@@ -61,7 +61,14 @@ function generateNaturalWord(length) {
 }
 
 function generateAndPaste() {
-  field.innerHTML = generateNaturalWord(parseFloat(document.querySelector('.selected').innerText));
+  field.remove();
+
+  let newField = document.createElement('div');
+  newField.id = 'field';
+  newField.innerHTML = generateNaturalWord(parseFloat(document.querySelector('.selected').innerText));
+  result.insertBefore(newField, openVault);
+
+  addEvenToField();
 }
 
 // initial random name
@@ -79,12 +86,16 @@ generateAndPaste();
 let offsetX, offsetY;
 let isDragging = false;
 
-field.addEventListener("mousedown", (e) => {
-  isDragging = true;
-  offsetX = e.clientX - field.offsetLeft;
-  offsetY = e.clientY - field.offsetTop;
-  field.classList.add('hold');
-});
+function addEvenToField() {
+  field.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    offsetX = e.clientX - field.offsetLeft;
+    offsetY = e.clientY - field.offsetTop;
+    field.classList.add('hold');
+  });
+}
+
+addEvenToField();
 
 document.addEventListener("mousemove", (e) => {
   if (!isDragging) return;
