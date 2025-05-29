@@ -1,7 +1,7 @@
 const optButtons = document.querySelectorAll('#options li');
 
-openOptions.addEventListener('click', toggleOptionsTab);
-openVault.addEventListener('click', toggleVaultTab);
+openOptions.addEventListener('pointerdown', toggleOptionsTab);
+openVault.addEventListener('pointerdown', toggleVaultTab);
 
 function toggleOptionsTab() {
   app.classList.toggle('optionsActive');
@@ -93,6 +93,7 @@ function favoriteOrTrashAnimation(xxx) {
 
 let offsetX, offsetY;
 let isDragging = false;
+let isClosing = false;
 
 function addEvenToField() {
   field.addEventListener('pointerdown', (e) => {
@@ -100,6 +101,12 @@ function addEvenToField() {
     offsetX = e.clientX - field.offsetLeft;
     offsetY = e.clientY - field.offsetTop;
     field.classList.add('hold');
+  });
+  openOptions.addEventListener('pointerdown', (e) => {
+    isClosing = true;
+  });
+  openVault.addEventListener('pointerdown', (e) => {
+    isClosing = true;
   });
 }
 
@@ -119,18 +126,42 @@ document.addEventListener('pointerup', (e) => {
   isDragging = false;
   field.classList.remove('hold');
 
-  const dropTarget = document.elementFromPoint(e.clientX, e.clientY);
-  if (dropTarget && (dropTarget.id === 'trash' || dropTarget.closest('#trash'))) {
+  let dropTarget = document.elementFromPoint(e.clientX, e.clientY);
+  if (!isClosing && dropTarget && (dropTarget.id === 'trash' || dropTarget.closest('#trash'))) {
     favoriteOrTrashAnimation(trash);
     generateAndPaste();
-  } else if (dropTarget && (dropTarget.id === 'favorite' || dropTarget.closest('#favorite'))) {
+  } else if (!isClosing && dropTarget && (dropTarget.id === 'favorite' || dropTarget.closest('#favorite'))) {
     favoriteOrTrashAnimation(favorite);
     document.querySelector('#vault ul').innerHTML += `
       <li>${field.innerText}</li>
     `;
     generateAndPaste();
   }
+
   // reset position:
   field.style.left = '';
   field.style.top = '';
+  //reset closing flag
+  isClosing = false;
 });
+
+// download database
+// let words = downloadData();
+
+// function downloadData() {
+//   return JSON.parse(localStorage.getItem('items'));
+// }
+
+// function uploadData(data) {
+//   localStorage.setItem('items', JSON.stringify(data));
+// }
+
+// function addWord() {
+//   let newWord = {
+//     liked: false,
+//     text: `${randomText}`
+//   }
+//   words.unshift(newWord);
+
+//   uploadData(words);
+// }

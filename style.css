@@ -229,6 +229,8 @@ body {
   }
   #app.optionsActive #openOptions {
     width: 20vw;
+    height: 100dvh;
+    /* background-color: grey; */
   }
   
   #app.vaultActive, #options.vaultActive {
@@ -237,5 +239,7 @@ body {
   }
   #app.vaultActive #openVault {
     width: 20vw;
+    height: 100dvh;
+    /* background-color: grey; */
   }
 }
