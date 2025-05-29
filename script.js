@@ -95,7 +95,7 @@ let offsetX, offsetY;
 let isDragging = false;
 
 function addEvenToField() {
-  field.addEventListener("mousedown", (e) => {
+  field.addEventListener('pointerdown', (e) => {
     isDragging = true;
     offsetX = e.clientX - field.offsetLeft;
     offsetY = e.clientY - field.offsetTop;
@@ -105,7 +105,7 @@ function addEvenToField() {
 
 addEvenToField();
 
-document.addEventListener("mousemove", (e) => {
+document.addEventListener('pointermove', (e) => {
   if (!isDragging) return;
 
   const x = e.clientX - offsetX;
@@ -115,15 +115,15 @@ document.addEventListener("mousemove", (e) => {
   field.style.top = `${y}px`;
 });
 
-document.addEventListener("mouseup", (e) => {
+document.addEventListener('pointerup', (e) => {
   isDragging = false;
   field.classList.remove('hold');
 
   const dropTarget = document.elementFromPoint(e.clientX, e.clientY);
-  if (dropTarget && (dropTarget.id === "trash" || dropTarget.closest('#trash'))) {
+  if (dropTarget && (dropTarget.id === 'trash' || dropTarget.closest('#trash'))) {
     favoriteOrTrashAnimation(trash);
     generateAndPaste();
-  } else if (dropTarget && (dropTarget.id === "favorite" || dropTarget.closest('#favorite'))) {
+  } else if (dropTarget && (dropTarget.id === 'favorite' || dropTarget.closest('#favorite'))) {
     favoriteOrTrashAnimation(favorite);
     document.querySelector('#vault ul').innerHTML += `
       <li>${field.innerText}</li>
