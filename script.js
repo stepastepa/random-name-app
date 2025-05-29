@@ -25,10 +25,8 @@ function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, cl
       return translateX;
     }
 
-    if(isOpen) {
-      translateX = getTranslateX();
-    }
-    console.log(startX);
+    translateX = getTranslateX();
+    // console.log(startX);
   };
 
   const moveDrag = (xxx) => {
@@ -38,12 +36,12 @@ function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, cl
     console.log(currentX);
 
     if (
-      (currentX < 0 && leftOrRight === 'left') ||
-      (currentX > 0 && leftOrRight === 'right') ||
+      (!isOpen && currentX < 0 && leftOrRight === 'left') ||
+      (!isOpen && currentX > 0 && leftOrRight === 'right') ||
 
-      (isOpen && currentX > 0 && leftOrRight === 'left') ||
-      (isOpen && currentX < 0 && leftOrRight === 'right')
-      ) {
+      (isOpen && currentX > translateX && leftOrRight === 'left') ||
+      (isOpen && currentX < translateX && leftOrRight === 'right')
+    ) {
       item.style.transform = `translateX(${currentX}px)`;
     }
     if (currentX < xTrigger && classTooltip) {
@@ -57,19 +55,42 @@ function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, cl
   const endDrag = () => {
     if (!isDragging) return;
     isDragging = false;
-    isOpen = true;
-    if ((currentX < (xTrigger + translateX) && leftOrRight === 'left') || (currentX > (xTrigger + translateX) && leftOrRight === 'right')) {
-      console.log('opened!');
-      item.style.transition = 'transform 0.2s ease-out';
-      item.classList.add(classTransformEnd);
-      item.style.transform = '';
-      if(isDelete === 'delete') {
-        setTimeout(() => item.remove(), 200);
+    if (!isOpen) {
+      if (
+        (currentX < xTrigger && leftOrRight === 'left') ||
+        (currentX > xTrigger && leftOrRight === 'right')
+      ) {
+        item.style.transition = 'transform 0.2s ease-out';
+        item.classList.add(classTransformEnd);
+        item.style.transform = '';
+        if(isDelete === 'delete') {
+          setTimeout(() => item.remove(), 200);
+        }
+
+        isOpen = true;
+        console.log(isOpen);
+      } else {
+        item.style.transition = 'transform 0.2s ease-out';
+        item.style.transform = '';
+        isOpen = false;
+        console.log(isOpen);
       }
-    } else {
-      item.style.transition = 'transform 0.2s ease-out';
-      item.classList.remove(classTransformEnd);
-      item.style.transform = '';
+    } else if (isOpen) {
+      if (
+        (isOpen && currentX > (translateX - xTrigger) && leftOrRight === 'left') ||  // -300 -100
+        (isOpen && currentX < (translateX - xTrigger) && leftOrRight === 'right')   // 300 100
+      ) {
+        item.style.transition = 'transform 0.2s ease-out';
+        item.classList.remove(classTransformEnd);
+        item.style.transform = '';
+        isOpen = false;
+        console.log(isOpen);
+      } else {
+        item.style.transition = 'transform 0.2s ease-out';
+        item.style.transform = '';
+        isOpen = true;
+        console.log(isOpen);
+      }
     }
   };
 
