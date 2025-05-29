@@ -13,6 +13,9 @@ html {
   --font-serif: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 
   font-family: var(--font-sans-serif);
+
+  --save: hsl(140deg 70% 55%);
+  --delete: hsl(355deg 74% 58%);
 }
 
 html, body {
@@ -62,6 +65,9 @@ body {
 
 #vault li {
   cursor: pointer;
+  transition: transform 0.3s ease;
+  user-select: none;
+  position: relative;
 }
 #vault li::before {
   content: '';
@@ -77,6 +83,33 @@ body {
 #vault li.liked::before {
   mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="black" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>') center / contain no-repeat;
   background-color: currentColor;
+}
+#vault li.deleting::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translateX(calc(100% + 0.5rem));
+  content: 'delete';
+  background-color: var(--delete);
+  color: #fff;
+  font-size: 0.75rem;
+  height: 100%;
+  padding: 0 0.5rem;
+  border-radius: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* animation: popup 0.1s ease forwards; */
+  opacity: 1;
+}
+
+@keyframes popup {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 #options li {
@@ -158,11 +191,11 @@ body {
   align-items: center;
 }
 #favorite {
-  background-color: hsl(140deg 70% 55%);
+  background-color: var(--save);
   cursor: pointer;
 }
 #trash {
-  background-color: hsl(355deg 74% 58%);
+  background-color: var(--delete);
   cursor: pointer;
 }
 #favorite svg, #trash svg {

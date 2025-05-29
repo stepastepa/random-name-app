@@ -1,5 +1,7 @@
 const optButtons = document.querySelectorAll('#options li');
 
+let isDeleting = false;
+
 openOptions.addEventListener('pointerdown', toggleOptionsTab);
 openVault.addEventListener('pointerdown', toggleVaultTab);
 
@@ -15,9 +17,10 @@ function toggleVaultTab() {
 
 // like
 document.querySelector('#vault').addEventListener('click', (event) => {
-  if (event.target.tagName === 'LI') {
+  if (event.target.tagName === 'LI' && !isDeleting) {
     event.target.classList.toggle('liked');
   }
+  isDeleting = false;
 });
 
 // select length
@@ -79,9 +82,9 @@ generateAndPaste();
 //   field.innerHTML = generateNaturalWord(length);
 // });
 
-////////////////////////////////////////////
-////////   drag + local storage   //////////
-////////////////////////////////////////////
+/////////////////////////////////////////////////
+////////   dragging and regenerating   //////////
+/////////////////////////////////////////////////
 
 // action icon animation
 function favoriteOrTrashAnimation(xxx) {
@@ -132,9 +135,13 @@ document.addEventListener('pointerup', (e) => {
     generateAndPaste();
   } else if (!isClosing && dropTarget && (dropTarget.id === 'favorite' || dropTarget.closest('#favorite'))) {
     favoriteOrTrashAnimation(favorite);
+
+    // add to vault and set item
     document.querySelector('#vault ul').innerHTML += `
       <li>${field.innerText}</li>
     `;
+    setVaultItems();
+
     generateAndPaste();
   }
 
@@ -144,6 +151,68 @@ document.addEventListener('pointerup', (e) => {
   //reset closing flag
   isClosing = false;
 });
+
+////////////////////////////////////////////////
+////////   removing from vault list   //////////
+////////////////////////////////////////////////
+
+function setVaultItems() {
+  const items = document.querySelectorAll('#vault li');
+
+  items.forEach(item => {
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+
+    const startDrag = (xxx) => {
+      startX = xxx;
+      isDragging = true;
+      item.style.transition = 'none';
+    };
+
+    const moveDrag = (xxx) => {
+      if (!isDragging) return;
+      currentX = xxx - startX;
+      if (currentX < 0) {
+        item.style.transform = `translateX(${currentX}px)`;
+      }
+      if (currentX < -50) {
+        item.classList.add('deleting');
+        isDeleting = true;
+      } else {
+        item.classList.remove('deleting');
+      }
+    };
+
+    const endDrag = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      if (currentX < -50) {
+        item.style.transition = 'transform 0.2s ease-out';
+        item.style.transform = 'translateX(-150%)';
+        setTimeout(() => item.remove(), 200);
+      } else {
+        item.style.transition = 'transform 0.3s ease';
+        item.style.transform = 'translateX(0)';
+      }
+    };
+
+    item.addEventListener('mousedown', e => startDrag(e.clientX));
+    document.addEventListener('mousemove', e => moveDrag(e.clientX));
+    document.addEventListener('mouseup', endDrag);
+
+    item.addEventListener('touchstart', e => startDrag(e.touches[0].clientX));
+    item.addEventListener('touchmove', e => {
+      moveDrag(e.touches[0].clientX);
+      e.preventDefault(); // блокирует горизонтальную прокрутку
+    }, { passive: false });
+    item.addEventListener('touchend', endDrag);
+  });
+}
+
+////////////////////////////////////
+////////   localStorage   //////////
+////////////////////////////////////
 
 // download database
 // let words = downloadData();
