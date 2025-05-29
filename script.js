@@ -33,7 +33,7 @@ function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, cl
     if (!isDragging) return;
 
     currentX = xxx - startX + translateX;
-    console.log(currentX);
+    // console.log(currentX);
 
     if (
       (!isOpen && currentX < 0 && leftOrRight === 'left') ||
@@ -46,7 +46,6 @@ function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, cl
     }
     if (currentX < xTrigger && classTooltip) {
       item.classList.add(classTooltip);
-      isDeleting = true;
     } else if (classTooltip){
       item.classList.remove(classTooltip);
     }
@@ -113,7 +112,9 @@ draggingToToggle(openVault, options, 'left', -100, 'noToolTip', 'vaultActive', '
 
 // like
 document.querySelector('#vault').addEventListener('click', (event) => {
+  // console.log('is deleting: ' + isDeleting);
   if (event.target.tagName === 'LI' && !isDeleting) {
+    // console.log('click');
     event.target.classList.toggle('liked');
   }
   isDeleting = false;
