@@ -83,6 +83,14 @@ generateAndPaste();
 ////////   drag + local storage   //////////
 ////////////////////////////////////////////
 
+// action icon animation
+function favoriteOrTrashAnimation(xxx) {
+  xxx.classList.remove('action');
+  requestAnimationFrame(
+    () => xxx.classList.add('action')
+  );
+}
+
 let offsetX, offsetY;
 let isDragging = false;
 
@@ -113,8 +121,10 @@ document.addEventListener("mouseup", (e) => {
 
   const dropTarget = document.elementFromPoint(e.clientX, e.clientY);
   if (dropTarget && (dropTarget.id === "trash" || dropTarget.closest('#trash'))) {
+    favoriteOrTrashAnimation(trash);
     generateAndPaste();
   } else if (dropTarget && (dropTarget.id === "favorite" || dropTarget.closest('#favorite'))) {
+    favoriteOrTrashAnimation(favorite);
     document.querySelector('#vault ul').innerHTML += `
       <li>${field.innerText}</li>
     `;

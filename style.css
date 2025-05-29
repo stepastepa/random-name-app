@@ -166,6 +166,12 @@ body {
 #favorite svg, #trash svg {
   opacity: 0.2;
 }
+#favorite.action svg {
+  animation: show 0.2s ease forwards;
+}
+#trash.action svg {
+  animation: show 0.2s ease forwards;
+}
 
 
 @media (max-width: 800px) {
