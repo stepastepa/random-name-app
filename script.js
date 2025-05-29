@@ -2,18 +2,93 @@ const optButtons = document.querySelectorAll('#options li');
 
 let isDeleting = false;
 
-openOptions.addEventListener('pointerdown', toggleOptionsTab);
-openVault.addEventListener('pointerdown', toggleVaultTab);
+function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, classTransformEnd, isDelete) {
+  let startX = 0;
+  let currentX = 0;
+  let translateX = 0;
 
-function toggleOptionsTab() {
-  app.classList.toggle('optionsActive');
-  vault.classList.toggle('optionsActive');
+  let isDragging = false;
+  let isOpen = false;
+
+  const startDrag = (xxx) => {
+    startX = xxx;
+    isDragging = true;
+    item.style.transition = 'none';
+
+    function getTranslateX() {
+      const transform = getComputedStyle(item).getPropertyValue('transform');
+      let translateX = 0;
+      if (transform !== 'none') {
+        const matrix = transform.match(/matrix.*\((.+)\)/)[1].split(', ');
+        translateX = parseFloat(matrix[4]);
+      }
+      return translateX;
+    }
+
+    if(isOpen) {
+      translateX = getTranslateX();
+    }
+    console.log(startX);
+  };
+
+  const moveDrag = (xxx) => {
+    if (!isDragging) return;
+
+    currentX = xxx - startX + translateX;
+    console.log(currentX);
+
+    if (
+      (currentX < 0 && leftOrRight === 'left') ||
+      (currentX > 0 && leftOrRight === 'right') ||
+
+      (isOpen && currentX > 0 && leftOrRight === 'left') ||
+      (isOpen && currentX < 0 && leftOrRight === 'right')
+      ) {
+      item.style.transform = `translateX(${currentX}px)`;
+    }
+    if (currentX < xTrigger && classTooltip) {
+      item.classList.add(classTooltip);
+      isDeleting = true;
+    } else if (classTooltip){
+      item.classList.remove(classTooltip);
+    }
+  };
+
+  const endDrag = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    isOpen = true;
+    if ((currentX < (xTrigger + translateX) && leftOrRight === 'left') || (currentX > (xTrigger + translateX) && leftOrRight === 'right')) {
+      console.log('opened!');
+      item.style.transition = 'transform 0.2s ease-out';
+      item.classList.add(classTransformEnd);
+      item.style.transform = '';
+      if(isDelete === 'delete') {
+        setTimeout(() => item.remove(), 200);
+      }
+    } else {
+      item.style.transition = 'transform 0.2s ease-out';
+      item.classList.remove(classTransformEnd);
+      item.style.transform = '';
+    }
+  };
+
+  trigger.addEventListener('mousedown', e => startDrag(e.clientX));
+  document.addEventListener('mousemove', e => moveDrag(e.clientX));
+  document.addEventListener('mouseup', endDrag);
+
+  trigger.addEventListener('touchstart', e => startDrag(e.touches[0].clientX));
+  trigger.addEventListener('touchmove', e => {
+    moveDrag(e.touches[0].clientX);
+    e.preventDefault(); // блокирует горизонтальную прокрутку
+  }, { passive: false });
+  trigger.addEventListener('touchend', endDrag);
 }
 
-function toggleVaultTab() {
-  app.classList.toggle('vaultActive');
-  options.classList.toggle('vaultActive');
-}
+draggingToToggle(openOptions, app, 'right', 100, 'noToolTip', 'optionsActive', 'noDelete');
+draggingToToggle(openOptions, vault, 'right', 100, 'noToolTip', 'optionsActive', 'noDelete');
+draggingToToggle(openVault, app, 'left', -100, 'noToolTip', 'vaultActive', 'noDelete');
+draggingToToggle(openVault, options, 'left', -100, 'noToolTip', 'vaultActive', 'noDelete');
 
 // like
 document.querySelector('#vault').addEventListener('click', (event) => {
@@ -192,7 +267,7 @@ function setVaultItems() {
         item.style.transform = 'translateX(-150%)';
         setTimeout(() => item.remove(), 200);
       } else {
-        item.style.transition = 'transform 0.3s ease';
+        item.style.transition = 'transform 0.2s ease';
         item.style.transform = 'translateX(0)';
       }
     };
