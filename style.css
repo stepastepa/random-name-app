@@ -159,9 +159,11 @@ body {
 }
 #favorite {
   background-color: hsl(140deg 70% 55%);
+  cursor: pointer;
 }
 #trash {
   background-color: hsl(355deg 74% 58%);
+  cursor: pointer;
 }
 #favorite svg, #trash svg {
   opacity: 0.2;
