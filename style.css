@@ -31,7 +31,7 @@ body {
   height: 100dvh;
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   background-color: #333;
   background-image: repeating-linear-gradient(-45deg, hsl(0deg 0% 0% / 0.02), hsl(0deg 0% 0% / 0.02) 5px, transparent 5px, transparent 10px);
 }
@@ -116,8 +116,8 @@ body {
   cursor: pointer;
 /*   box-shadow: 0 0 0 3px hsl(0deg 0 0 / 0.2); */
   background-color: hsl(0deg 0 0 / 0.15);
-  height: 2.75rem;
-  width: 2.75rem;
+  height: 3.5rem;
+  width: 3.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
