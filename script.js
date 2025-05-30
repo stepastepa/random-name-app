@@ -9,6 +9,7 @@ function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, cl
 
   let isDragging = false;
   let isOpen = false;
+  let isNotSingleClick = false;
 
   const startDrag = (xxx) => {
     startX = xxx;
@@ -31,6 +32,7 @@ function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, cl
 
   const moveDrag = (xxx) => {
     if (!isDragging) return;
+    isNotSingleClick = true;
 
     currentX = xxx - startX + translateX;
     // console.log(currentX);
@@ -44,6 +46,7 @@ function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, cl
     ) {
       item.style.transform = `translateX(${currentX}px)`;
     }
+    // add tooltip with message
     if (currentX < xTrigger && classTooltip) {
       item.classList.add(classTooltip);
     } else if (classTooltip){
@@ -54,6 +57,8 @@ function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, cl
   const endDrag = () => {
     if (!isDragging) return;
     isDragging = false;
+    if (!isNotSingleClick) return;
+    
     if (!isOpen) {
       if (
         (currentX < xTrigger && leftOrRight === 'left') ||
@@ -91,6 +96,7 @@ function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, cl
         console.log(isOpen);
       }
     }
+    isNotSingleClick = false;
   };
 
   trigger.addEventListener('mousedown', e => startDrag(e.clientX));
