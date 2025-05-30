@@ -134,31 +134,189 @@ optButtons.forEach(opt => {
 /////////////////////////////////////////
 
 function generateNaturalWord(length) {
-  const vowels = 'aeiou';
-  const consonants = 'bcdfghjklmnpqrstvwxyz';
+  const vowels = 'aeiouy';
+  const consonants = 'bcdfghjklmnpqrstvwxz';
 
-  let word = '';
-  let useVowel = Math.random() < 0.5;
+  const frequentPairs = ['th', 'qu', 'st', 'ou', 'ch', 'sh', 'ph', 'tr', 'br', 'cl'];
+  const frequentSyllables = ['tra', 'ble', 'quo', 'ver', 'str', 'pre', 'com', 'gen', 'lex', 'mor'];
 
-  let sameTypeStreak = 1; // Сколько подряд идёт гласных или согласных
-  const maxStreak = 3; // Максимум подряд (aa / qqq)
+  const prefixes = ['un', 're', 'ex', 'pre', 'sub', 'trans', 'im', 'de', 'in'];
+  const suffixes = ['ion', 'ity', 'ous', 'al', 'ing', 'or', 'ist', 'ed', 'es'];
 
-  for (let i = 0; i < length; i++) {
-    const letterSet = useVowel ? vowels : consonants;
-    const randomIndex = Math.floor(Math.random() * letterSet.length);
-    word += letterSet[randomIndex];
 
-    // Решаем, менять ли тип (гласные / согласные)
-    if (sameTypeStreak >= maxStreak || Math.random() < 0.5) {
-      useVowel = !useVowel;
-      sameTypeStreak = 1;
-    } else {
-      sameTypeStreak++;
+  //// грубая проверка на читаемость ////
+
+  const forbiddenClusters = [
+    // Повторы согласных
+    'bbb', 'ccc', 'ddd', 'fff', 'ggg', 'hhh', 'jjj', 'kkk', 'lll', 'mmm', 'nnn', 'ppp', 'qqq', 'rrr', 'sss', 'ttt', 'vvv', 'www', 'xxx', 'yyy', 'zzz',
+
+    // Повторы гласных или сложные повторения
+    'aaee', 'eeaa', 'iiuu', 'uuoo', 'ouuo', 'yiyi', 'iyiy', 'uaie', 'iei', 'ayei', 'eeie',
+
+    // Подряд 3+ согласных
+    'ttr', 'clf', 'cch', 'ggj', 'xkj', 'bvt', 'znk', 'dkg', 'mgj', 'ptk', 'zkq', 'clx', 'clz', 'xqx', 'xzk', 'qtr', 'qkr',
+
+    // Невозможные/редкие начальные кластеры
+    'xq', 'zx', 'qz', 'qv', 'qj', 'qb', 'qd', 'qg', 'qx', 'qk', 'qf',
+
+    // Сомнительные сочетания
+    'ayi', 'uyu', 'yiy', 'iyi', 'yiy', 'iei', 'uyy', 'iyy', 'iyy', 'yuy', 'yeu', 'iyu',
+
+    // Сложные зеркальные сочетания
+    'xvx', 'bzb', 'pdp', 'kqk', 'xyx', 'zyz', 'tkt', 'gzg', 'djd',
+
+    // Редкие и неестественные согласные кластеры
+    'bcf', 'gdt', 'plg', 'xbt', 'rdk', 'zpk', 'nzc', 'ptg', 'qcp', 'vbx', 'nkq', 'ckz', 'czq', 'jzr', 'lzq', 'zdv',
+
+    // Странные окончания
+    'qz', 'xz', 'zzq', 'xqz', 'vgz', 'zzv', 'xxk', 'kkz', 'zkk', 'cck',
+
+    // Длинные неестественные группы
+    'mnmn', 'bcbc', 'bdbd', 'kdkd', 'zgzg', 'mzgm', 'xmxm', 'rqrq', 'xqxq', 'kzkz',
+
+    // Примеры повторяющихся редких букв
+    'qq', 'jj', 'yy', 'zz', 'xx', 'vv', 'kk', 'gg', 'ww',
+
+    // Нереальные группы гласных
+    'aeou', 'uoai', 'aeiy', 'yyoo', 'eaei', 'ouaa', 'ieou', 'yaou'
+  ];
+
+  // function isPronounceable(word) {
+  //   return !forbiddenClusters.some(cluster => word.includes(cluster));
+  // }
+
+  function isPronounceable(word) {
+    for (const cluster of forbiddenClusters) {
+      if (word.includes(cluster)) return false;
+    }
+    // запрет 4+ согласных подряд
+    if (/[bcdfghjklmnpqrstvwxz]{4,}/.test(word)) return false;
+
+    return true;
+  }
+  
+  //// мягкая проверка на читаемость ////
+
+  function isPhoneticallyPlausible(word) {
+    const vowelSet = new Set(['a', 'e', 'i', 'o', 'u', 'y']);
+    const onsetClusters = ['bl', 'br', 'cl', 'cr', 'dr', 'fl', 'fr', 'gl', 'gr', 'pl', 'pr', 'sl', 'sm', 'sn', 'sp', 'st', 'str', 'sw', 'tr'];
+    const codaClusters = ['nd', 'nt', 'st', 'ld', 'rd', 'lk', 'mp', 'ng', 'sk', 'pt', 'ct'];
+
+    const lower = word.toLowerCase();
+
+    // 1. Проверка начального кластера
+    for (let i = 3; i > 0; i--) {
+      const start = lower.slice(0, i);
+      if (onsetClusters.includes(start)) break;
+      if (i === 1 && !vowelSet.has(start)) return false;
+    }
+
+    // 2. Проверка конечного кластера
+    for (let i = 3; i > 0; i--) {
+      const end = lower.slice(-i);
+      if (codaClusters.includes(end)) break;
+      if (i === 1 && !vowelSet.has(end)) return false;
+    }
+
+    // 3. Проверка чрезмерных подряд согласных (например, больше 3 подряд)
+    let maxConsonants = 0;
+    let current = 0;
+    for (const ch of lower) {
+      if (!vowelSet.has(ch)) {
+        current++;
+        if (current > maxConsonants) maxConsonants = current;
+      } else {
+        current = 0;
+      }
+    }
+    if (maxConsonants > 3) return false;
+
+    // 4. Проверка невозможных сочетаний
+    const impossible = ['qx', 'xq', 'jj', 'yy', 'zzq', 'ttr', 'cck', 'ggt', 'ptk', 'mnmn'];
+    for (const pattern of impossible) {
+      if (lower.includes(pattern)) return false;
+    }
+
+    return true;
+  }
+
+  ////////////////
+
+  function generateOnce() {
+    let word = '';
+    let remaining = length;
+
+    if (Math.random() < 0.5 && remaining > 6) {
+      const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+      word += prefix;
+      remaining -= prefix.length;
+    }
+
+    while (remaining > 3) {
+      let chunk = '';
+      const position = word.length === 0 ? 'start' : (remaining <= 4 ? 'end' : 'middle');
+
+      const choice = Math.random();
+      if (choice < 0.2) {
+        chunk = frequentPairs[Math.floor(Math.random() * frequentPairs.length)];
+      } else if (choice < 0.5) {
+        chunk = frequentSyllables[Math.floor(Math.random() * frequentSyllables.length)];
+      } else {
+        const c = consonants[Math.floor(Math.random() * consonants.length)];
+        let vPool = vowels;
+        if (position === 'start') {
+          vPool = 'aeiou';
+        }
+        const v = vPool[Math.floor(Math.random() * vPool.length)];
+        chunk = c + v;
+      }
+
+      if (chunk.length > remaining) break;
+      word += chunk;
+      remaining -= chunk.length;
+    }
+
+    if (remaining > 2 && Math.random() < 0.5) {
+      const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+      if (suffix.length <= remaining) {
+        word += suffix;
+        remaining -= suffix.length;
+      }
+    }
+
+    while (remaining > 0) {
+      const pool = consonants + (word.length === 0 ? 'aeiou' : vowels);
+      word += pool[Math.floor(Math.random() * pool.length)];
+      remaining--;
+    }
+
+    return word;
+  }
+
+  // Перегенерация, если слово не проходит проверку
+  for (let attempt = 0; attempt < 100; attempt++) {
+    const candidate = generateOnce();
+    // двойная проверка
+    if (isPronounceable(candidate)) {
+      return candidate;
+    }
+    if (isPhoneticallyPlausible(candidate)) {
+      return candidate;
     }
   }
 
-  return word;
+  // Если за 10 попыток не удалось — возвращаем последнее
+  return generateOnce();
 }
+
+// for (let i = 0; i < 10; i++) {
+//   const len = Math.floor(Math.random() * 6) + 5;
+//   console.log(generateNaturalWord(len));
+// }
+
+//
+/////
+//////////
 
 function generateAndPaste() {
   field.remove();
@@ -173,11 +331,6 @@ function generateAndPaste() {
 
 // initial random name
 generateAndPaste();
-
-// field.addEventListener('click', () => {
-//   let length = parseFloat(document.querySelector('.selected').innerText);
-//   field.innerHTML = generateNaturalWord(length);
-// });
 
 /////////////////////////////////////////////////
 ////////   dragging and regenerating   //////////
