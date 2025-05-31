@@ -181,7 +181,7 @@ body {
 
 #openOptions, #openVault {
   display: none;
-  transition: all 0.5s ease;
+  /* transition: all 0.5s ease; */
 }
 
 #favorite, #trash {
@@ -235,7 +235,7 @@ body {
     border-radius: 0;
     min-height: 100dvh;
     z-index: 2;
-    transition: transform 1s ease, border-radius 0.5s ease;
+    /* transition: transform 1s ease, border-radius 0.5s ease; */
   }
   #openOptions, #openVault {
     flex-shrink: 0;
@@ -258,21 +258,22 @@ body {
     flex-shrink: 0;
   }
   
+  /*
   #app.optionsActive, #vault.optionsActive {
     transform: translateX(80%);
     border-radius: 1rem;
-  }
-  #app.optionsActive #openOptions {
-    width: 20vw;
-    height: 100dvh;
-    /* background-color: grey; */
   }
   
   #app.vaultActive, #options.vaultActive {
     transform: translateX(-80%);
     border-radius: 1rem;
   }
-  #app.vaultActive #openVault {
+  */
+
+  #app.active {
+    border-radius: 1rem;
+  }
+  #openVault.active, #openOptions.active {
     width: 20vw;
     height: 100dvh;
     /* background-color: grey; */

@@ -1,120 +1,36 @@
+import { toggleHiddenPanel } from '/random-name-app/sliding-panels.js';
+
 const optButtons = document.querySelectorAll('#options li');
 
 let isDeleting = false;
 
-function draggingToToggle(trigger, item, leftOrRight, xTrigger, classTooltip, classTransformEnd, isDelete) {
-  let startX = 0;
-  let currentX = 0;
-  let translateX = 0;
+///////////////////////////////////////////////
+////////   showing and hiding panels   ////////
+///////////////////////////////////////////////
 
-  let isDragging = false;
-  let isOpen = false;
-  let isNotSingleClick = false;
+toggleHiddenPanel(
+  openOptions,         // triggerIcon
+  [app],               // panelsToMove
+  [vault],             // panelsToHide
+  100,                 // xLength (trigger after ...px drag)
+  true,                // isDrag
+  true,                // isClick
+  80,                  // xHidden (what is moved away in ...vw(%))
+  'right',             // toRightOrLeft
+  300                  // timing
+);
 
-  const startDrag = (xxx) => {
-    startX = xxx;
-    isDragging = true;
-    item.style.transition = 'none';
-
-    function getTranslateX() {
-      const transform = getComputedStyle(item).getPropertyValue('transform');
-      let translateX = 0;
-      if (transform !== 'none') {
-        const matrix = transform.match(/matrix.*\((.+)\)/)[1].split(', ');
-        translateX = parseFloat(matrix[4]);
-      }
-      return translateX;
-    }
-
-    translateX = getTranslateX();
-    // console.log(startX);
-  };
-
-  const moveDrag = (xxx) => {
-    if (!isDragging) return;
-    isNotSingleClick = true;
-
-    currentX = xxx - startX + translateX;
-    // console.log(currentX);
-
-    if (
-      (!isOpen && currentX < 0 && leftOrRight === 'left') ||
-      (!isOpen && currentX > 0 && leftOrRight === 'right') ||
-
-      (isOpen && currentX > translateX && leftOrRight === 'left') ||
-      (isOpen && currentX < translateX && leftOrRight === 'right')
-    ) {
-      item.style.transform = `translateX(${currentX}px)`;
-    }
-    // add tooltip with message
-    if (currentX < xTrigger && classTooltip) {
-      item.classList.add(classTooltip);
-    } else if (classTooltip){
-      item.classList.remove(classTooltip);
-    }
-  };
-
-  const endDrag = () => {
-    if (!isDragging) return;
-    isDragging = false;
-    if (!isNotSingleClick) return;
-    
-    if (!isOpen) {
-      if (
-        (currentX < xTrigger && leftOrRight === 'left') ||
-        (currentX > xTrigger && leftOrRight === 'right')
-      ) {
-        item.style.transition = 'transform 0.2s ease-out';
-        item.classList.add(classTransformEnd);
-        item.style.transform = '';
-        if(isDelete === 'delete') {
-          setTimeout(() => item.remove(), 200);
-        }
-
-        isOpen = true;
-        console.log(isOpen);
-      } else {
-        item.style.transition = 'transform 0.2s ease-out';
-        item.style.transform = '';
-        isOpen = false;
-        console.log(isOpen);
-      }
-    } else if (isOpen) {
-      if (
-        (isOpen && currentX > (translateX - xTrigger) && leftOrRight === 'left') ||  // -300 -100
-        (isOpen && currentX < (translateX - xTrigger) && leftOrRight === 'right')   // 300 100
-      ) {
-        item.style.transition = 'transform 0.2s ease-out';
-        item.classList.remove(classTransformEnd);
-        item.style.transform = '';
-        isOpen = false;
-        console.log(isOpen);
-      } else {
-        item.style.transition = 'transform 0.2s ease-out';
-        item.style.transform = '';
-        isOpen = true;
-        console.log(isOpen);
-      }
-    }
-    isNotSingleClick = false;
-  };
-
-  trigger.addEventListener('mousedown', e => startDrag(e.clientX));
-  document.addEventListener('mousemove', e => moveDrag(e.clientX));
-  document.addEventListener('mouseup', endDrag);
-
-  trigger.addEventListener('touchstart', e => startDrag(e.touches[0].clientX));
-  trigger.addEventListener('touchmove', e => {
-    moveDrag(e.touches[0].clientX);
-    e.preventDefault(); // блокирует горизонтальную прокрутку
-  }, { passive: false });
-  trigger.addEventListener('touchend', endDrag);
-}
-
-draggingToToggle(openOptions, app, 'right', 100, 'noToolTip', 'optionsActive', 'noDelete');
-draggingToToggle(openOptions, vault, 'right', 100, 'noToolTip', 'optionsActive', 'noDelete');
-draggingToToggle(openVault, app, 'left', -100, 'noToolTip', 'vaultActive', 'noDelete');
-draggingToToggle(openVault, options, 'left', -100, 'noToolTip', 'vaultActive', 'noDelete');
+toggleHiddenPanel(
+  openVault,           // triggerIcon
+  [app],               // panelsToMove
+  [options],           // panelsToHide
+  100,                 // xLength (trigger after ...px drag)
+  true,                // isDrag
+  true,                // isClick
+  80,                  // xHidden (what is moved away in ...vw(%))
+  'left',              // toRightOrLeft
+  300                  // timing
+);
 
 // like
 document.querySelector('#vault').addEventListener('click', (event) => {
