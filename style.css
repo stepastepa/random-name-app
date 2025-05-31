@@ -50,6 +50,11 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 #vault {
   padding: 2rem 1rem 2rem 2rem;
