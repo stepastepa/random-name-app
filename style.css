@@ -218,6 +218,10 @@ html, body {
   animation: show 0.2s ease forwards;
 }
 
+.draggable {
+  touch-action: none; /* 🔥 Это ОЧЕНЬ важно для работы preventDefault */
+}
+
 
 @media (max-width: 800px) {
   body {

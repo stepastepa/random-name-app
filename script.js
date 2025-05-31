@@ -245,10 +245,11 @@ function generateAndPaste() {
 
   let newField = document.createElement('div');
   newField.id = 'field';
+  newField.classList.add('draggable'); // 🔥 иначе игнорирует preventDefault
   newField.innerHTML = generateNaturalWord(parseFloat(document.querySelector('.selected').innerText));
   result.insertBefore(newField, openVault);
 
-  addEvenToField();
+  addEventsToField();
 }
 
 // initial random name
@@ -270,7 +271,7 @@ let offsetX, offsetY;
 let isDragging = false;
 let isClosing = false;
 
-function addEvenToField() {
+function addEventsToField() {
   field.addEventListener('pointerdown', (e) => {
     isDragging = true;
     offsetX = e.clientX - field.offsetLeft;
@@ -285,7 +286,7 @@ function addEvenToField() {
   });
 }
 
-addEvenToField();
+addEventsToField();
 
 document.addEventListener('pointermove', (e) => {
   if (!isDragging) return;
@@ -311,7 +312,7 @@ document.addEventListener('pointerup', (e) => {
 
     // add to vault and set item
     document.querySelector('#vault ul').innerHTML += `
-      <li>${field.innerText}</li>
+      <li class='draggable'>${field.innerText}</li>
     `;
     setVaultItems();
 
