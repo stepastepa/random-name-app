@@ -51,10 +51,10 @@ html, body {
   align-items: center;
   justify-content: center;
 
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
 }
 #vault {
   padding: 2rem 1rem 2rem 2rem;
