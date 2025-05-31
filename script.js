@@ -10,8 +10,8 @@ let isDeleting = false;
 
 toggleHiddenPanel(
   openOptions,         // triggerIcon
-  [app, vault],               // panelsToMove (add translateX(80vw/0))
-  [],             // panelsToHide (add z-index: -99)
+  [app, vault],        // panelsToMove (add translateX(80vw/0))
+  [],                  // panelsToHide (add z-index: -99)
   100,                 // xLength (trigger after ...px drag)
   true,                // isDrag
   true,                // isClick
@@ -22,8 +22,8 @@ toggleHiddenPanel(
 
 toggleHiddenPanel(
   openVault,           // triggerIcon
-  [app, options],               // panelsToMove
-  [],           // panelsToHide
+  [app, options],      // panelsToMove (add translateX(80vw/0))
+  [],                  // panelsToHide (add z-index: -99)
   100,                 // xLength (trigger after ...px drag)
   true,                // isDrag
   true,                // isClick

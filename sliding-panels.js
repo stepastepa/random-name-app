@@ -267,8 +267,8 @@ export { toggleHiddenPanel };
 /*
 toggleHiddenPanel(
   openOptions,         // triggerIcon
-  [app],               // panelsToMove
-  [vault],             // panelsToHide
+  [app, vault],        // panelsToMove (add translateX(80vw/0))
+  [],                  // panelsToHide (add z-index: -99)
   100,                 // xLength (trigger after ...px drag)
   true,                // isDrag
   true,                // isClick
@@ -279,8 +279,8 @@ toggleHiddenPanel(
 
 toggleHiddenPanel(
   openVault,           // triggerIcon
-  [app],               // panelsToMove
-  [options],           // panelsToHide
+  [app, options],      // panelsToMove (add translateX(80vw/0))
+  [],                  // panelsToHide (add z-index: -99)
   100,                 // xLength (trigger after ...px drag)
   true,                // isDrag
   true,                // isClick
