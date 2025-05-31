@@ -94,7 +94,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
     });
     // finger 🖐🖐🖐🖐🖐
     triggerIcon.addEventListener('touchstart', (e) => {
-      e.preventDefault(); // prevent click after swipe
+      e.preventDefault(); // 🔥 prevent click after swipe
 
       dragging = true;
       startX = e.touches[0].clientX;
@@ -103,7 +103,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
       panelsToMove.forEach(el => {
         translateX.push(getTranslateX(el));
       });
-    }, { passive: false }); // for prevent default
+    }, { passive: false }); // 👈 for prevent default
 
     // mouse
     document.addEventListener('mousemove', (e) => {
@@ -153,7 +153,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
     // finger 🖐🖐🖐🖐🖐
     document.addEventListener('touchmove', (e) => {
       if (!dragging) return;
-      e.preventDefault(); // prevent scrolling while swiping
+      e.preventDefault(); // 🔥 prevent scrolling while swiping
       isMoved = true;
       isNotClick = true;
 
@@ -177,7 +177,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
           el.style.transform = `translateX(${delta + translateX[index]}px)`;
         }
       });
-    }, { passive: false }); // for prevent default
+    }, { passive: false }); // 👈 for prevent default
 
     // mouse
     document.addEventListener('mouseup', () => {

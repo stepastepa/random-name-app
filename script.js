@@ -289,13 +289,14 @@ addEvenToField();
 
 document.addEventListener('pointermove', (e) => {
   if (!isDragging) return;
+  e.preventDefault(); // 🔥 блокируем прокрутку страницы
 
   const x = e.clientX - offsetX;
   const y = e.clientY - offsetY;
 
   field.style.left = `${x}px`;
   field.style.top = `${y}px`;
-});
+}, { passive: false }); // 👈 обязательно, чтобы preventDefault работал
 
 document.addEventListener('pointerup', (e) => {
   isDragging = false;
@@ -376,8 +377,8 @@ function setVaultItems() {
     item.addEventListener('touchstart', e => startDrag(e.touches[0].clientX));
     item.addEventListener('touchmove', e => {
       moveDrag(e.touches[0].clientX);
-      e.preventDefault(); // блокирует горизонтальную прокрутку
-    }, { passive: false });
+      e.preventDefault(); // 🔥 блокируем горизонтальную прокрутку
+    }, { passive: false }); // 👈 обязательно, чтобы preventDefault работал
     item.addEventListener('touchend', endDrag);
   });
 }
