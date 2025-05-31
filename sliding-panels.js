@@ -79,7 +79,8 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
   }
 
   if (isDrag) {
-    // mouse
+    // Start 🟢🟢🟢
+    // mouse 🖱️
     triggerIcon.addEventListener('mousedown', (e) => {
       dragging = true;
       startX = e.clientX;
@@ -92,7 +93,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
       });
       // console.log('translateX - ' + translateX);
     });
-    // finger 🖐🖐🖐🖐🖐
+    // finger 🖐
     triggerIcon.addEventListener('touchstart', (e) => {
       e.preventDefault(); // 🔥 prevent click after swipe
 
@@ -105,7 +106,8 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
       });
     }, { passive: false }); // 👈 for prevent default
 
-    // mouse
+    // Move 🟡🟡🟡
+    // mouse 🖱️
     document.addEventListener('mousemove', (e) => {
       if (!dragging) return;
       isMoved = true;
@@ -150,7 +152,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
         }
       });
     });
-    // finger 🖐🖐🖐🖐🖐
+    // finger 🖐
     document.addEventListener('touchmove', (e) => {
       if (!dragging) return;
       e.preventDefault(); // 🔥 prevent scrolling while swiping
@@ -179,7 +181,8 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
       });
     }, { passive: false }); // 👈 for prevent default
 
-    // mouse
+    // End 🔴🔴🔴
+    // mouse 🖱️
     document.addEventListener('mouseup', () => {
       dragging = false;
       console.log('end dragging');
@@ -198,10 +201,13 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
         finalDelta = Math.abs(finalDelta);
       }
       /////////////////////////////////////////
+      // convert to percent
+      const screenWidth = window.innerWidth;
+      let finalDeltaInPercent = (finalDelta * 100) / screenWidth;
 
-      console.log('finalDelta - ' + finalDelta);
+      console.log('finalDeltaInPercent - ' + finalDeltaInPercent);
       if (!isOpen) {
-        if (finalDelta > xLength) {
+        if (finalDeltaInPercent > xLength) {
           showPanel();
           console.log('showing');
           isNotClick = false;
@@ -211,7 +217,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
           isNotClick = false;
         }
       } else if (isOpen) {
-        if (finalDelta > xLength) {
+        if (finalDeltaInPercent > xLength) {
           hidePanel();
           console.log('hiding');
           isNotClick = false;
@@ -223,7 +229,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
       }
       isMoved = false;
     });
-    // finger 🖐🖐🖐🖐🖐
+    // finger 🖐
     document.addEventListener('touchend', () => {
       dragging = false;
       if (!isMoved) return;
@@ -240,9 +246,12 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
         finalDelta = Math.abs(finalDelta);
       }
       /////////////////////////////////////////
+      // convert to percent
+      const screenWidth = window.innerWidth;
+      let finalDeltaInPercent = (finalDelta * 100) / screenWidth;
 
       if (!isOpen) {
-        if (finalDelta > xLength) {
+        if (finalDeltaInPercent > xLength) {
           showPanel();
           isNotClick = false;
         } else {
@@ -250,7 +259,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
           isNotClick = false;
         }
       } else if (isOpen) {
-        if (finalDelta > xLength) {
+        if (finalDeltaInPercent > xLength) {
           hidePanel();
           isNotClick = false;
         } else {

@@ -10,24 +10,24 @@ let isDeleting = false;
 
 toggleHiddenPanel(
   openOptions,         // triggerIcon
-  [app, vault],        // panelsToMove (add translateX(80vw/0))
+  [app, vault],        // panelsToMove <-> .onscreen(80vw-0) vs (0-100%)
   [],                  // panelsToHide (add z-index: -99)
-  100,                 // xLength (trigger after ...px drag)
+  20,                  // xLength (trigger after ...% drag)
   true,                // isDrag
   true,                // isClick
-  80,                  // xHidden (what is moved away in ...vw(%))
+  80,                  // xHidden (what is moved away in ...vw)
   'right',             // toRightOrLeft
   300                  // timing
 );
 
 toggleHiddenPanel(
   openVault,           // triggerIcon
-  [app, options],      // panelsToMove (add translateX(80vw/0))
+  [app, options],      // panelsToMove <-> .onscreen(80vw-0) vs (0-100%)
   [],                  // panelsToHide (add z-index: -99)
-  100,                 // xLength (trigger after ...px drag)
+  20,                  // xLength (trigger after ...% drag)
   true,                // isDrag
   true,                // isClick
-  80,                  // xHidden (what is moved away in ...vw(%))
+  80,                  // xHidden (what is moved away in ...vw)
   'left',              // toRightOrLeft
   300                  // timing
 );
@@ -330,6 +330,7 @@ document.addEventListener('pointerup', (e) => {
 ////////   removing from vault list   //////////
 ////////////////////////////////////////////////
 
+// 🔴🔴🔴 заменить на универсальную функцию 🔴🔴🔴
 function setVaultItems() {
   const items = document.querySelectorAll('#vault li');
 
