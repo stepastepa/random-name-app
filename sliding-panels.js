@@ -19,7 +19,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
       el.classList.add('active');
       triggerIcon.style.transition = `all ${timing}ms ease`;
       triggerIcon.classList.add('active');
-      if (el.classList.contains('content')) {
+      if (el.classList.contains('onscreen')) {
         el.style.transform = `translateX(${direction * xHidden}vw)`;
       } else {
         el.style.transform = `translateX(0)`;
@@ -37,7 +37,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
       el.classList.remove('active');
       triggerIcon.style.transition = `all ${timing}ms ease`;
       triggerIcon.classList.remove('active');
-      if (el.classList.contains('content')) {
+      if (el.classList.contains('onscreen')) {
         el.style.transform = 'translateX(0)';
       } else {
         el.style.transform = `translateX(${direction * (-1) * 100}%)`;
@@ -141,7 +141,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
       /////////////////////////////////////////
 
       panelsToMove.forEach((el, index) => {
-        if (el.classList.contains('content')) {
+        if (el.classList.contains('onscreen')) {
           el.style.transform = `translateX(${delta + translateX[index]}px)`;
         } else {
           el.style.transform = `translateX(${delta + translateX[index]}px)`;
@@ -168,7 +168,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
       /////////////////////////////////////////
 
       panelsToMove.forEach((el, index) => {
-        if (el.classList.contains('content')) {
+        if (el.classList.contains('onscreen')) {
           el.style.transform = `translateX(${delta + translateX[index]}px)`;
         } else {
           el.style.transform = `translateX(${delta + translateX[index]}px)`;
