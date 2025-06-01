@@ -95,7 +95,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
     });
     // finger 🖐
     triggerIcon.addEventListener('touchstart', (e) => {
-      e.preventDefault(); // 🔥 prevent click after swipe
+      //e.preventDefault(); // 🔥 prevent click after swipe
 
       dragging = true;
       startX = e.touches[0].clientX;
@@ -104,7 +104,7 @@ function toggleHiddenPanel(triggerIcon, panelsToMove, panelsToHide, xLength, isD
       panelsToMove.forEach(el => {
         translateX.push(getTranslateX(el));
       });
-    }, { passive: false }); // 👈 for prevent default
+    }/*, { passive: false }*/); // 👈 for prevent default
 
     // Move 🟡🟡🟡
     // mouse 🖱️
